@@ -9,7 +9,7 @@
 # Row operations and minor helpers
 
 
-def print_matrix(M,end="\n"):
+def print_matrix(M,end=""):
     '''
     Prints the matrix M, as well as the string end.
 
@@ -22,7 +22,7 @@ def print_matrix(M,end="\n"):
         num_cols=len(M[0])
 
     i = 0
-    s=""
+    s="\n"
 
     while i < num_rows:
 
@@ -195,7 +195,7 @@ def reduce(M):
 
     reduce: Matrix -> None
     '''
-    print_matrix(M,end="      Starting matrix\n")
+    print_matrix(M,end="      Starting matrix")
     
     col = 0
     start_from_row = 0
@@ -207,7 +207,7 @@ def reduce(M):
     
     while start_from_row < len(M) and col < len(M[0]):
 
-        print_matrix(M, end="      ~\n")
+        print_matrix(M, end="      ~")
         
         flag = reduce_column(M,col,start_from_row)
         col = col+1
@@ -217,7 +217,7 @@ def reduce(M):
 
     print_matrix(M, end="      RREF\n")
 
-
+'''
 # Tests
 
 reduce([[0,0],[0,1]])
@@ -240,6 +240,11 @@ reduce([[1,0,3,2],[2,0,1,1]]) # noninvertible (1,3)
 reduce([[1,0,0,2],[1,0,0,4]]) # noninvertible (1,4)
 reduce([[0,1,2,3],[0,2,3,2]]) # noninvertible (2,3)
 reduce([[2,4,4,2],[3,6,6,3],[0,0,2,0]]) # noninvertible (1,3) with zero row
+reduce([[1,2,3,4],[0,0,2,0],[0,0,0,0]]) # noninvertible with zero row
 
 
 reduce([[2,3],[2,4],[1,1],[2,1]]) # more rows than columns
+'''
+
+# Sample
+reduce([[2,4,4,2],[3,6,6,3],[0,0,2,0]])
