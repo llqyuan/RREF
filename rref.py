@@ -1,12 +1,14 @@
-# The purpose of this program is to row reduce a matrix to its
-#   reduced row echelon form (RREF).
+print("reduce() reduces a Matrix to reduced row echelon form.\n\n"+\
+      "is_rref() determines whether or not a Matrix is in reduced row\n"+\
+      "echelon form.\n")
+
 
 # A Matrix is a nonempty (listof (listof (anyof Int Float))) where each
 #   sublist is nonempty and of the same length.
 
 
 # =====================================================
-# Row operations and minor helpers
+# Row operations, other minor helpers
 
 
 def print_matrix(M,end=""):
@@ -124,7 +126,132 @@ def swap_row(M, i, j):
 
 
 # =====================================================
-# Row reducing
+# Determining whether or not a matrix is in reduced row echelon form
+
+def leading_ones(M):
+    '''
+    Returns a list of the indices of the columns of
+    the leading ones in M (position in list corresponds to
+    same row in M). If the first nonzero entry is not a one,
+    the entry is indicated by -1. If there are no leading ones,
+    the entry is indicated by (row length) + (row index). This
+    will help to check that the indices of the leading ones are
+    in strictly increasing order.
+    '''
+
+    ones = []
+
+    row_i = 0
+        
+    while row_i in range(len(M)):
+            
+        i = 0
+            
+        while i<len(M[row_i]) and M[row_i][i]==0:
+            i = i+1
+            
+        if i>=len(M[row_i]):
+            ones.append(len(M[row_i])+row_i) # special: it's a row of 0's
+            
+        elif i<len(M[row_i]) and M[row_i][i]==1: # it's a leading 1
+            ones.append(i)
+
+        else:
+            ones.append(-1) # special, not a leading 1
+
+        row_i += 1
+        
+    return ones
+
+
+def is_rref(M):
+    '''
+    Returns True if M is in RREF, and False otherwise
+    '''
+
+    indices_of_ones = leading_ones(M)
+
+    if -1 in indices_of_ones: # One of the rows isn't a leading one
+        return False
+
+    
+    i = 1
+
+    # To help check that the indices of the leading ones are
+    #  in strictly increasing order
+    
+    while i < len(indices_of_ones) \
+          and indices_of_ones[i-1]<indices_of_ones[i]:
+        i = i+1
+        
+    if i >= len(indices_of_ones): # Strictly increasing order
+
+        rowof_l_one = 0
+
+        
+        while rowof_l_one in range(len(indices_of_ones)):
+
+            j = rowof_l_one - 1
+            k = rowof_l_one + 1
+            col = indices_of_ones[rowof_l_one] # 'Column' of leading one
+
+
+            if col>=len(M[0]):
+                
+                # Row of zeroes that is at bottom of matrix. Moreover,
+                #   the leading ones in all of the previous rows meet
+                #   necessary conditions, and all rows below must be
+                #   rows of zeroes.
+
+                return True
+            
+
+            while j>=0 and M[j][col]==0:
+                j = j-1
+
+            while k<len(indices_of_ones) and M[k][col]==0:
+                k = k+1
+
+            if j in range(len(indices_of_ones)) or \
+               k in range(len(indices_of_ones)):
+                
+                # The leading one isn't the only nonzero entry in its
+                #   column
+
+                return False
+
+            rowof_l_one = rowof_l_one + 1
+
+        return True
+
+
+    else: # loop ended because the indices weren't in strictly increasing order
+
+        return False
+
+'''
+The following should return True:
+
+is_rref([[0,0,0],[0,0,0],[0,0,0]])
+is_rref([[0,0,1],[0,0,0]])
+is_rref([[0,1,4],[0,0,0],[0,0,0]])
+is_rref([[1,0,5,4],[0,1,6,9],[0,0,0,0]])
+is_rref([[1,0,1,0,4],[0,1,2,0,-2],[0,0,0,1,0]])
+is_rref([[1,0],[0,1],[0,0],[0,0]])
+
+
+The following should return False:
+
+is_rref([[1,0,0],[0,2,0],[0,0,1]])  (The leading entry isn't a 1)
+is_rref([[1,1,0],[0,1,0],[0,0,1]])  (Not the only nonzero entry in column)
+is_rref([[1,0,0],[0,1,0],[0,3,1]])  (Not the only nonzero entry in column)
+is_rref([[0,0,1],[1,0,0],[0,0,0]])  (Not in strictly increasing order)
+
+'''
+
+
+# =====================================================
+# Reducing a matrix to reduced row echelon form
 
 
 def reduce_column(M, col, start_from_row):
@@ -246,5 +373,5 @@ reduce([[1,2,3,4],[0,0,2,0],[0,0,0,0]]) # noninvertible with zero row
 reduce([[2,3],[2,4],[1,1],[2,1]]) # more rows than columns
 '''
 
-# Sample
+print("Sample calculation of reduced row echelon form:")
 reduce([[2,4,4,2],[3,6,6,3],[0,0,2,0]])
