@@ -1,5 +1,5 @@
-print("reduce() reduces a Matrix to reduced row echelon form.\n\n"+\
-      "is_rref() determines whether or not a Matrix is in reduced row\n"+\
+print("reduce(M) reduces the matrix M to reduced row echelon form.\n\n"+\
+      "is_rref(M) determines whether or not M is in reduced row\n"+\
       "echelon form.\n")
 
 
